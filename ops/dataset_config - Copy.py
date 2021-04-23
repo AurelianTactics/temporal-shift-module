@@ -101,31 +101,17 @@ def return_kinetics(modality):
     return filename_categories, filename_imglist_train, filename_imglist_val, root_data, prefix
 
 
-def return_mabe(modality):
-    # dir is train_images_key/[key]/0/[key]_{0:6d}.jpg
-    # filename_imglist_train/val are the entire train data, I can separate them with a seed in dataset.py
-    filename_categories = 4
-    if modality == 'RGB':
-        root_data = ROOT_DATASET + 'train_images_key'
-        filename_imglist_train = 'train_annotations_dict.npy'  # 'tsm/labels/train_labels.txt'
-        filename_imglist_val = 'train_annotations_dict.npy'  # 'tsm/labels/val_labels.txt'
-        prefix = '{}_{:06d}.jpg'  # sequence key then frame number
-    else:
-        raise NotImplementedError('no such modality:' + modality)
-    return filename_categories, filename_imglist_train, filename_imglist_val, root_data, prefix
-
-
 def return_dataset(dataset, modality):
     dict_single = {'jester': return_jester, 'something': return_something, 'somethingv2': return_somethingv2,
                    'ucf101': return_ucf101, 'hmdb51': return_hmdb51,
-                   'kinetics': return_kinetics, 'mabe': return_mabe}
+                   'kinetics': return_kinetics }
     if dataset in dict_single:
         file_categories, file_imglist_train, file_imglist_val, root_data, prefix = dict_single[dataset](modality)
     else:
         raise ValueError('Unknown dataset '+dataset)
 
-    #file_imglist_train = os.path.join(ROOT_DATASET, file_imglist_train)
-    #file_imglist_val = os.path.join(ROOT_DATASET, file_imglist_val)
+    file_imglist_train = os.path.join(ROOT_DATASET, file_imglist_train)
+    file_imglist_val = os.path.join(ROOT_DATASET, file_imglist_val)
     if isinstance(file_categories, str):
         file_categories = os.path.join(ROOT_DATASET, file_categories)
         with open(file_categories) as f:
